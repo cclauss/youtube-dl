@@ -37,11 +37,7 @@ All of the options has not been fully tested on Pythonista, so please report any
 E.g. some of the postprocessors won't work on Pythonista (ffmpeg, avconv).
 
 
-# EMBEDDING YOUTUBE-DL
-
-youtube-dl makes the best effort to be a good command-line program, and thus should be callable from any programming language. If you encounter any problems parsing its output, feel free to [create a report](https://github.com/rg3/youtube-dl/issues/new).
-
-From a Python program, you can embed youtube-dl in a more powerful fashion, like this:
+# EXAMPLES
 
 ```python
 import youtube_dl
@@ -51,7 +47,26 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download(['http://www.youtube.com/watch?v=BaW_jenozKc'])
 ```
 
-Most likely, you'll want to use various options. For a list of what can be done, have a look at [youtube_dl/YoutubeDL.py](https://github.com/HyShai/youtube-dl/blob/ytdl-pythonista/youtube_dl/YoutubeDL.py#L69). For a start, if you want to intercept youtube-dl's output, set a `logger` object.
+Another simple example to watch or download (using [Documents](https://itunes.apple.com/us/app/documents-5-fast-pdf-reader/id364901807?mt=8&uo=4&at=11l6hc)):
+
+```python
+from youtube_dl_new import YoutubeDL
+import webbrowser
+import sys
+import console
+
+ydl = YoutubeDL({'quiet':True})
+
+info = ydl.extract_info(sys.argv[1], download=False)
+
+choice = console.alert('Download or Watch in Safari ','','Download','Watch')
+if choice==1:
+    webbrowser.open('r'+info['url'])
+elif choice==2:
+    webbrowser.open('safari-'+info['url'])
+```
+
+Most likely, you'll want to use various options. For a list of what can be done, have a look at [youtube_dl/YoutubeDL.py](https://github.com/HyShai/youtube-dl/blob/ytdl-pythonista/youtube_dl/YoutubeDL.py#L87). For a start, if you want to intercept youtube-dl's output, set a `logger` object.
 
 Here's a more complete example of a program that outputs only errors (and a short message after the download is finished), and downloads/converts the video to an mp3 file:
 
