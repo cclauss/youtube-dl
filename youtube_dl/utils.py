@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import calendar
 import codecs
 import contextlib
-import ctypes
+#import ctypes
 import datetime
 import email.utils
 import errno
@@ -18,7 +18,7 @@ import json
 import locale
 import math
 import os
-import pipes
+#import pipes
 import platform
 import re
 import ssl

@@ -505,7 +505,7 @@ class InfoExtractor(object):
                 if mobj:
                     break
 
-        if os.name != 'nt' and sys.stderr.isatty():
+        if os.name != 'nt':
             _name = '\033[0;34m%s\033[0m' % name
         else:
             _name = name
