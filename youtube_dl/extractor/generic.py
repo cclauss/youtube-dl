@@ -498,6 +498,19 @@ class GenericIE(InfoExtractor):
                 'uploader': 'www.abc.net.au',
                 'title': 'Game of Thrones with dice - Dungeons and Dragons fantasy role-playing game gets new life - 19/01/2015',
             }
+        },
+        # embedded viddler video
+        {
+            'url': 'http://deadspin.com/i-cant-stop-watching-john-wall-chop-the-nuggets-with-th-1681801597',
+            'info_dict': {
+                'id': '4d03aad9',
+                'ext': 'mp4',
+                'uploader': 'deadspin',
+                'title': 'WALL-TO-GORTAT',
+                'timestamp': 1422285291,
+                'upload_date': '20150126',
+            },
+            'add_ie': ['Viddler'],
         }
     ]
 
@@ -860,9 +873,16 @@ class GenericIE(InfoExtractor):
         if mobj is not None:
             return self.url_result(mobj.group('url'))
 
+        # Look for embedded Viddler player
+        mobj = re.search(
+            r'<(?:iframe[^>]+?src|param[^>]+?value)=(["\'])(?P<url>(?:https?:)?//(?:www\.)?viddler\.com/(?:embed|player)/.+?)\1',
+            webpage)
+        if mobj is not None:
+            return self.url_result(mobj.group('url'))
+
         # Look for Ooyala videos
-        mobj = (re.search(r'player.ooyala.com/[^"?]+\?[^"]*?(?:embedCode|ec)=(?P<ec>[^"&]+)', webpage) or
-                re.search(r'OO.Player.create\([\'"].*?[\'"],\s*[\'"](?P<ec>.{32})[\'"]', webpage))
+        mobj = (re.search(r'player\.ooyala\.com/[^"?]+\?[^"]*?(?:embedCode|ec)=(?P<ec>[^"&]+)', webpage) or
+                re.search(r'OO\.Player\.create\([\'"].*?[\'"],\s*[\'"](?P<ec>.{32})[\'"]', webpage))
         if mobj is not None:
             return OoyalaIE._build_url_result(mobj.group('ec'))
 

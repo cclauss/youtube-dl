@@ -33,3 +33,15 @@ test/testdata
 youtube-dl.zsh
 .idea
 .idea/*
+bin/
+devscripts/
+docs/
+test/
+.travis.yml
+CONTRIBUTING.md
+MANIFEST.in
+Makefile
+setup.cfg
+setup.py
+tox.ini
+youtube-dl.plugin.zsh
