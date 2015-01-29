@@ -15,7 +15,7 @@ youtube-dl - download videos from youtube.com or other video platforms
 
 Or
 
-* Use the excellent [stash](https://github.com/ywangd/stash) shell and:
+* Use the excellent [StaSH](https://github.com/ywangd/stash) shell and:
     
         wget https://github.com/HyShai/youtube-dl/archive/ytdl-pythonista.zip
 
