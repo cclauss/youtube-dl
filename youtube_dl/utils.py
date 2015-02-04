@@ -32,6 +32,7 @@ import xml.etree.ElementTree
 import zlib
 
 from .compat import (
+    compat_basestring,
     compat_chr,
     compat_getenv,
     compat_html_entities,
@@ -140,7 +141,7 @@ else:
     def find_xpath_attr(node, xpath, key, val):
         # Here comes the crazy part: In 2.6, if the xpath is a unicode,
         # .//node does not match if a node is a direct child of . !
-        if isinstance(xpath, unicode):
+        if isinstance(xpath, compat_str):
             xpath = xpath.encode('ascii')
 
         for f in node.findall(xpath):
@@ -654,9 +655,14 @@ class YoutubeDLHTTPSHandler(compat_urllib_request.HTTPSHandler):
         self._params = params
 
     def https_open(self, req):
+        kwargs = {}
+        if hasattr(self, '_context'):  # python > 2.6
+            kwargs['context'] = self._context
+        if hasattr(self, '_check_hostname'):  # python 3.x
+            kwargs['check_hostname'] = self._check_hostname
         return self.do_open(functools.partial(
             _create_http_connection, self, self._https_conn_class, True),
-            req)
+            req, **kwargs)
 
 
 def parse_iso8601(date_str, delimiter='T'):
@@ -695,7 +701,7 @@ def unified_strdate(date_str, day_first=True):
     # %z (UTC offset) is only supported in python>=3.2
     date_str = re.sub(r' ?(\+|-)[0-9]{2}:?[0-9]{2}$', '', date_str)
     # Remove AM/PM + timezone
-    date_str = re.sub(r'(?i)\s*(?:AM|PM)\s+[A-Z]+', '', date_str)
+    date_str = re.sub(r'(?i)\s*(?:AM|PM)(?:\s+[A-Z]+)?', '', date_str)
 
     format_expressions = [
         '%d %B %Y',
@@ -1257,7 +1263,7 @@ def float_or_none(v, scale=1, invscale=1, default=None):
 
 
 def parse_duration(s):
-    if not isinstance(s, basestring if sys.version_info < (3, 0) else compat_str):
+    if not isinstance(s, compat_basestring):
         return None
 
     s = s.strip()
@@ -1269,7 +1275,10 @@ def parse_duration(s):
             (?P<only_hours>[0-9.]+)\s*(?:hours?)|
 
             (?:
-                (?:(?P<hours>[0-9]+)\s*(?:[:h]|hours?)\s*)?
+                (?:
+                    (?:(?P<days>[0-9]+)\s*(?:[:d]|days?)\s*)?
+                    (?P<hours>[0-9]+)\s*(?:[:h]|hours?)\s*
+                )?
                 (?P<mins>[0-9]+)\s*(?:[:m]|mins?|minutes?)\s*
             )?
             (?P<secs>[0-9]+)(?P<ms>\.[0-9]+)?\s*(?:s|secs?|seconds?)?
@@ -1287,6 +1296,8 @@ def parse_duration(s):
         res += int(m.group('mins')) * 60
     if m.group('hours'):
         res += int(m.group('hours')) * 60 * 60
+    if m.group('days'):
+        res += int(m.group('days')) * 24 * 60 * 60
     if m.group('ms'):
         res += float(m.group('ms'))
     return res
@@ -1421,7 +1432,7 @@ def uppercase_escape(s):
 
 def escape_rfc3986(s):
     """Escape non-ASCII characters as suggested by RFC 3986"""
-    if sys.version_info < (3, 0) and isinstance(s, unicode):
+    if sys.version_info < (3, 0) and isinstance(s, compat_str):
         s = s.encode('utf-8')
     return compat_urllib_parse.quote(s, b"%/;:@&=+$,!~*'()?#[]")
 
@@ -1537,7 +1548,7 @@ def js_to_json(code):
     res = re.sub(r'''(?x)
         "(?:[^"\\]*(?:\\\\|\\")?)*"|
         '(?:[^'\\]*(?:\\\\|\\')?)*'|
-        [a-zA-Z_][a-zA-Z_0-9]*
+        [a-zA-Z_][.a-zA-Z_0-9]*
         ''', fix_kv, code)
     res = re.sub(r',(\s*\])', lambda m: m.group(1), res)
     return res

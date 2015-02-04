@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 import os
 import time
 
+from socket import error as SocketError
+import errno
+
 from .common import FileDownloader
 from ..compat import (
     compat_urllib_request,
@@ -99,6 +102,11 @@ class HttpFD(FileDownloader):
                             resume_len = 0
                             open_mode = 'wb'
                             break
+            except SocketError as e:
+                if e.errno != errno.ECONNRESET:
+                    # Connection reset is no problem, just retry
+                    raise
+
             # Retry
             count += 1
             if count <= retries:

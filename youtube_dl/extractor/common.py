@@ -89,7 +89,8 @@ class InfoExtractor(object):
                     * player_url SWF Player URL (used for rtmpdump).
                     * protocol   The protocol that will be used for the actual
                                  download, lower-case.
-                                 "http", "https", "rtsp", "rtmp", "m3u8" or so.
+                                 "http", "https", "rtsp", "rtmp", "rtmpe",
+                                 "m3u8", or "m3u8_native".
                     * preference Order number of this format. If this field is
                                  present and not None, the formats get sorted
                                  by this field, regardless of all other values.
@@ -144,6 +145,7 @@ class InfoExtractor(object):
     thumbnail:      Full URL to a video thumbnail image.
     description:    Full video description.
     uploader:       Full name of the video uploader.
+    creator:        The main artist who created the video.
     timestamp:      UNIX timestamp of the moment the video became available.
     upload_date:    Video upload date (YYYYMMDD).
                     If not explicitly set, calculated from timestamp.
@@ -703,11 +705,11 @@ class InfoExtractor(object):
                 preference,
                 f.get('language_preference') if f.get('language_preference') is not None else -1,
                 f.get('quality') if f.get('quality') is not None else -1,
-                f.get('height') if f.get('height') is not None else -1,
-                f.get('width') if f.get('width') is not None else -1,
-                ext_preference,
                 f.get('tbr') if f.get('tbr') is not None else -1,
                 f.get('vbr') if f.get('vbr') is not None else -1,
+                ext_preference,
+                f.get('height') if f.get('height') is not None else -1,
+                f.get('width') if f.get('width') is not None else -1,
                 f.get('abr') if f.get('abr') is not None else -1,
                 audio_ext_preference,
                 f.get('fps') if f.get('fps') is not None else -1,
@@ -859,10 +861,13 @@ class InfoExtractor(object):
         return formats
 
     # TODO: improve extraction
-    def _extract_smil_formats(self, smil_url, video_id):
+    def _extract_smil_formats(self, smil_url, video_id, fatal=True):
         smil = self._download_xml(
             smil_url, video_id, 'Downloading SMIL file',
-            'Unable to download SMIL file')
+            'Unable to download SMIL file', fatal=fatal)
+        if smil is False:
+            assert not fatal
+            return []
 
         base = smil.find('./head/meta').get('base')
 

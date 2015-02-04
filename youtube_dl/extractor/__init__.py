@@ -82,6 +82,7 @@ from .crunchyroll import (
     CrunchyrollShowPlaylistIE
 )
 from .cspan import CSpanIE
+from .ctsnews import CtsNewsIE
 from .dailymotion import (
     DailymotionIE,
     DailymotionPlaylistIE,
@@ -89,6 +90,7 @@ from .dailymotion import (
 )
 from .daum import DaumIE
 from .dbtv import DBTVIE
+from .dctp import DctpTvIE
 from .deezer import DeezerPlaylistIE
 from .dfb import DFBIE
 from .dotsub import DotsubIE
@@ -180,6 +182,7 @@ from .heise import HeiseIE
 from .hellporno import HellPornoIE
 from .helsinki import HelsinkiIE
 from .hentaistigma import HentaiStigmaIE
+from .historicfilms import HistoricFilmsIE
 from .hitbox import HitboxIE, HitboxLiveIE
 from .hornbunny import HornBunnyIE
 from .hostingbulk import HostingBulkIE
@@ -282,11 +285,22 @@ from .ndr import NDRIE
 from .ndtv import NDTVIE
 from .netzkino import NetzkinoIE
 from .nerdcubed import NerdCubedFeedIE
+from .nerdist import NerdistIE
 from .newgrounds import NewgroundsIE
 from .newstube import NewstubeIE
+from .nextmedia import (
+    NextMediaIE,
+    NextMediaActionNewsIE,
+    AppleDailyRealtimeNewsIE,
+    AppleDailyAnimationNewsIE
+)
 from .nfb import NFBIE
 from .nfl import NFLIE
-from .nhl import NHLIE, NHLVideocenterIE
+from .nhl import (
+    NHLIE,
+    NHLNewsIE,
+    NHLVideocenterIE,
+)
 from .niconico import NiconicoIE, NiconicoPlaylistIE
 from .ninegag import NineGagIE
 from .noco import NocoIE
@@ -304,7 +318,8 @@ from .nrk import (
     NRKIE,
     NRKTVIE,
 )
-from .ntv import NTVIE
+from .ntvde import NTVDeIE
+from .ntvru import NTVRuIE
 from .nytimes import NYTimesIE
 from .nuvid import NuvidIE
 from .oktoberfesttv import OktoberfestTVIE
@@ -539,6 +554,7 @@ from .wimp import WimpIE
 from .wistia import WistiaIE
 from .worldstarhiphop import WorldStarHipHopIE
 from .wrzuta import WrzutaIE
+from .wsj import WSJIE
 from .xbef import XBefIE
 from .xboxclips import XboxClipsIE
 from .xhamster import XHamsterIE
@@ -546,6 +562,7 @@ from .xminus import XMinusIE
 from .xnxx import XNXXIE
 from .xvideos import XVideosIE
 from .xtube import XTubeUserIE, XTubeIE
+from .xuite import XuiteIE
 from .xxxymovies import XXXYMoviesIE
 from .yahoo import (
     YahooIE,

@@ -25,6 +25,7 @@ if os.name == 'nt':
     import ctypes
 
 from .compat import (
+    compat_basestring,
     compat_cookiejar,
     compat_expanduser,
     compat_http_client,
@@ -958,14 +959,16 @@ class YoutubeDL(object):
         if thumbnails is None:
             thumbnail = info_dict.get('thumbnail')
             if thumbnail:
-                thumbnails = [{'url': thumbnail}]
+                info_dict['thumbnails'] = thumbnails = [{'url': thumbnail}]
         if thumbnails:
             thumbnails.sort(key=lambda t: (
                 t.get('preference'), t.get('width'), t.get('height'),
                 t.get('id'), t.get('url')))
-            for t in thumbnails:
+            for i, t in enumerate(thumbnails):
                 if 'width' in t and 'height' in t:
                     t['resolution'] = '%dx%d' % (t['width'], t['height'])
+                if t.get('id') is None:
+                    t['id'] = '%d' % i
 
         if thumbnails and 'thumbnail' not in info_dict:
             info_dict['thumbnail'] = thumbnails[-1]['url']
@@ -1074,8 +1077,8 @@ class YoutubeDL(object):
                             selected_format = {
                                 'requested_formats': formats_info,
                                 'format': rf,
-                                'format_id': rf,
-                                'ext': formats_info[0]['ext'],
+                                'format_id': '%s+%s' % (formats_info[0].get('format_id'),
+                                                        formats_info[1].get('format_id')),
                                 'width': formats_info[0].get('width'),
                                 'height': formats_info[0].get('height'),
                                 'resolution': formats_info[0].get('resolution'),
@@ -1558,7 +1561,7 @@ class YoutubeDL(object):
         # urllib chokes on URLs with non-ASCII characters (see http://bugs.python.org/issue3991)
         # To work around aforementioned issue we will replace request's original URL with
         # percent-encoded one
-        req_is_string = isinstance(req, basestring if sys.version_info < (3, 0) else compat_str)
+        req_is_string = isinstance(req, compat_basestring)
         url = req if req_is_string else req.get_full_url()
         url_escaped = escape_url(url)
 
