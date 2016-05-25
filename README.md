@@ -8,7 +8,7 @@ youtube-dl - download videos from youtube.com or other video platforms
 
 # INSTALLATION
 
-* Using [filedownloader.py](https://gist.github.com/elliospizzaman/89edf288a15fde45682a), download and extract the zip of this repo:
+* Using [filedownloader.py](https://gist.github.com/ejmsoftware/89edf288a15fde45682a), download and extract the zip of this repo:
     * Set URL to `https://codeload.github.com/HyShai/youtube-dl/zip/ytdl-pythonista`.
     * Tap "Download"
     * When the Extract File alert appears, tap "OK".
